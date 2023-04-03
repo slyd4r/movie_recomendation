@@ -1,14 +1,12 @@
 from flask import Flask, request, jsonify
 app = Flask(__name__)
 
+import  ai
 
-@app.route('/getmsg/', methods=['GET'])
+@app.route('/movie/', methods=['GET'])
 def respond():
-    # Retrieve the name from the url parameter /getmsg/?name=
+    # Retrieve the name from the url parameter /movie/?name=
     name = request.args.get("name", None)
-
-    # For debugging
-    print(f"Received: {name}")
 
     response = {}
 
@@ -19,10 +17,12 @@ def respond():
     elif str(name).isdigit():
         response["ERROR"] = "The name can't be numeric. Please send a string."
     else:
-        response["MESSAGE"] = f"Welcome {name} to our awesome API!"
+        response["movies"] = ai.get_movie_recommendation(name)
+        response["status"] = "true"
 
     # Return the response in json format
     return jsonify(response)
+
 
 
 @app.route('/post/', methods=['POST'])
@@ -45,7 +45,7 @@ def post_something():
 @app.route('/')
 def index():
     # A welcome message to test our server
-    return "<h1>Welcome to our medium-greeting-api!</h1>"
+    return "<h1>slyd4r movie recomendation</h1>"
 
 
 if __name__ == '__main__':
